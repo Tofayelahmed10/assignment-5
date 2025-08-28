@@ -1,4 +1,4 @@
-//  heard 
+
 const sumNumber = 1;
 const queryBtn = document.querySelectorAll('.heart-btn');
 
@@ -11,11 +11,11 @@ for (const query of queryBtn) {
   });
 }
 
-// copy 
+
 
 function copyAlert(idOrText, alertText) {
   if (confirm(alertText)) {
-    // id দিলে এলিমেন্ট থেকে নেবে, নাহলে সরাসরি টেক্সট কপি করবে
+    
     const el = document.getElementById(idOrText);
     const toCopy = el ? el.innerText : idOrText;
     if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
@@ -24,11 +24,11 @@ function copyAlert(idOrText, alertText) {
   }
 }
 
-// সব Copy বাটনের জন্য—কার্ড থেকে নম্বর তুলে কপি
+
 const copyQueryBtn = document.querySelectorAll('.copy-btn');
 for (const totalCopyQuery of copyQueryBtn) {
   totalCopyQuery.addEventListener('click', function () {
-    // কার্ড ধরা
+   
     let p = this;
     while (p && !p.classList.contains('hotline-card')) {
       p = p.parentElement;
@@ -48,7 +48,7 @@ for (const totalCopyQuery of copyQueryBtn) {
   });
 }
 
-// CALL / COIN / HISTORY
+
 
 function getNowTime() {
   return new Date().toLocaleTimeString();
@@ -86,7 +86,7 @@ const minusCount = 20;
 const callBtns = document.querySelectorAll('.call-btn');
 for (const btn of callBtns) {
   btn.addEventListener('click', function () {
-    // কার্ড ধরা
+ 
     let p = this;
     while (p && !p.classList.contains('hotline-card')) {
       p = p.parentElement;
