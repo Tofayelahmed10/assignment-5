@@ -1,81 +1,128 @@
-// console.log('js file connected');
+//  heard 
+const sumNumber = 1;
+const queryBtn = document.querySelectorAll('.heart-btn');
 
-
-// Navbar
-const heartCountEl = document.getElementById('heartCount')
-const coinCountEl  = document.getElementById('coinCount')
-const copyCountEl  = document.getElementById('copyCount')
-const historyList     = document.getElementById('historyList')
-const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-
-// help from chat gpt
-function getNowTime() {
-  return new Date().toLocaleTimeString([], { hour12: false });
+for (const query of queryBtn) {
+  query.addEventListener('click', function () {
+    const heard = document.getElementById('heartCount').innerText;
+    const parseHeard = parseInt(heard);
+    const sumHeader = parseHeard + sumNumber;
+    document.getElementById('heartCount').innerText = sumHeader;
+  });
 }
 
+// copy 
 
-document.querySelectorAll('.heart-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    const current = parseInt(heartCountEl.innerText, 10) || 0;
-    heartCountEl.innerText = current + 1
+function copyAlert(idOrText, alertText) {
+  if (confirm(alertText)) {
+    // id দিলে এলিমেন্ট থেকে নেবে, নাহলে সরাসরি টেক্সট কপি করবে
+    const el = document.getElementById(idOrText);
+    const toCopy = el ? el.innerText : idOrText;
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(toCopy);
+    }
+  }
+}
+
+// সব Copy বাটনের জন্য—কার্ড থেকে নম্বর তুলে কপি
+const copyQueryBtn = document.querySelectorAll('.copy-btn');
+for (const totalCopyQuery of copyQueryBtn) {
+  totalCopyQuery.addEventListener('click', function () {
+    // কার্ড ধরা
+    let p = this;
+    while (p && !p.classList.contains('hotline-card')) {
+      p = p.parentElement;
+    }
+    if (!p) return;
+
+    const numberEl = p.querySelector('.hotline-number');
+    const numberText = numberEl ? numberEl.innerText.trim() : '';
+
+    copyAlert(numberText, 'Number copied: ' + numberText);
+
+    // copy-count 
+    const copyHeard = document.getElementById('copyCount').innerText;
+    const parseCopy = parseInt(copyHeard);
+    const sumCopy = parseCopy + sumNumber;
+    document.getElementById('copyCount').innerText = sumCopy;
   });
-})
+}
 
+// CALL / COIN / HISTORY
 
-document.querySelectorAll('.copy-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    const card   = btn.closest('.hotline-card')
-    const number = card.querySelector('.hotline-number').innerText.trim();
-    try {
-       navigator.clipboard.writeText(number);
-      alert('Copied: ' + number);
-      const cc = parseInt(copyCountEl.innerText, 10) || 0;
-      copyCountEl.innerText = cc + 1
-    } catch(e) {
-      alert('Copy failed. Please allow clipboard permission.')
+function getNowTime() {
+  return new Date().toLocaleTimeString();
+}
+
+function buildHistoryItem(name, sNum, timeText) {
+  const li = document.createElement('li');
+  li.className = 'flex justify-between items-start border-b border-gray-200 py-3 last:border-b-0';
+
+  const left = document.createElement('div');
+  const h = document.createElement('p');
+  const p = document.createElement('p');
+
+  h.className = 'font-medium';
+  p.className = 'text-sm text-gray-500';
+
+  h.innerText = name;
+  p.innerText = sNum;
+
+  left.appendChild(h);
+  left.appendChild(p);
+
+  const right = document.createElement('div');
+  right.className = 'text-sm text-gray-500 whitespace-nowrap self-start';
+  right.innerText = timeText;
+
+  li.appendChild(left);
+  li.appendChild(right);
+  return li;
+}
+
+const collDataFile = [];
+const minusCount = 20;
+
+const callBtns = document.querySelectorAll('.call-btn');
+for (const btn of callBtns) {
+  btn.addEventListener('click', function () {
+    // কার্ড ধরা
+    let p = this;
+    while (p && !p.classList.contains('hotline-card')) {
+      p = p.parentElement;
     }
-  })
-});
+    if (!p) return;
 
+    const name = p.querySelector('.service-name') ? p.querySelector('.service-name').innerText.trim() : '';
+    const sNum = p.querySelector('.hotline-number') ? p.querySelector('.hotline-number').innerText.trim() : '';
 
-document.querySelectorAll('.call-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    const card   = btn.closest('.hotline-card')
-    const name   = card.querySelector('.service-name').innerText.trim()
-    const number = card.querySelector('.hotline-number').innerText.trim()
+    const cone = parseInt(document.getElementById('coinCount').innerText);
 
-    let coins = parseInt(coinCountEl.innerText, 10) || 0;
-    if (coins < 20) {
-      alert('Not enough coins (need 20 coins for every call).')
-      return
+    if (cone < 20) {
+      alert("You don't have any money! 20 money to call.");
+      return;
+    } else if (confirm('Calling ' + name + ': ' + sNum)) {
+      const min = cone - minusCount;
+      document.getElementById('coinCount').innerText = min;
+    } else {
+      return;
     }
-    coins = coins - 20;
-    coinCountEl.innerText = coins;
 
-    alert('Calling ' + name + ' ' + number)
+    const calldata = {
+      service: name,
+      serviceNum: sNum,
+      date: getNowTime()
+    };
+    collDataFile.push(calldata);
 
-    // add to history
-    const li = document.createElement('li')
-    const p1 = document.createElement('p');
-    const p2 = document.createElement('p')
-    const t  = document.createElement('span');
+    const historyContainer = document.getElementById('historyList');
+    const item = buildHistoryItem(calldata.service, calldata.serviceNum, calldata.date);
+    historyContainer.appendChild(item);
+  });
+}
 
-    p1.className = 'font-medium';
-    p2.className = 'text-sm text-gray-500'
-    t.className  = 'text-sm text-gray-500'
-
-    p1.innerText = name;
-    p2.innerText = number
-    t.innerText  = getNowTime()
-
-    li.appendChild(p1)
-    li.appendChild(p2)
-    li.appendChild(t)
-    historyList.appendChild(li)
-  })
-})
-
-
-clearHistoryBtn.addEventListener('click', function(){
-  historyList.innerHTML = '';
-})
+// history clear container 
+document.getElementById('clearHistoryBtn')
+  .addEventListener('click', function () {
+    document.getElementById('historyList').innerText = '';
+  });
