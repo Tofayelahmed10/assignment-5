@@ -23,11 +23,11 @@ document.querySelectorAll('.heart-btn').forEach(function(btn){
 
 
 document.querySelectorAll('.copy-btn').forEach(function(btn){
-  btn.addEventListener('click', async function(){
+  btn.addEventListener('click', function(){
     const card   = btn.closest('.hotline-card')
     const number = card.querySelector('.hotline-number').innerText.trim();
     try {
-      await navigator.clipboard.writeText(number);
+       navigator.clipboard.writeText(number);
       alert('Copied: ' + number);
       const cc = parseInt(copyCountEl.innerText, 10) || 0;
       copyCountEl.innerText = cc + 1
