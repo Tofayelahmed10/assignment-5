@@ -52,7 +52,7 @@ document.querySelectorAll('.call-btn').forEach(function(btn){
     coins = coins - 20;
     coinCountEl.innerText = coins;
 
-    alert('Calling ' + name + ' ' + number + ' ...')
+    alert('Calling ' + name + ' ' + number)
 
     // add to history
     const li = document.createElement('li')
