@@ -46,7 +46,7 @@ document.querySelectorAll('.call-btn').forEach(function(btn){
 
     let coins = parseInt(coinCountEl.innerText, 10) || 0;
     if (coins < 20) {
-      alert('Not enough coins (need 20).')
+      alert('Not enough coins (need 20 coins for every call).')
       return
     }
     coins = coins - 20;
